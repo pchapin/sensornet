@@ -9,8 +9,8 @@ Setup:
 
 3. Have the tmote running the "basestation" program plugged into your computer.
 
-4. Now, run the following command "java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB0:115200"
-	a. If this fails, run command "motelist"	
+4. Now, run the following command: "java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB0:115200"
+	a. If this fails, run the command: "motelist"	
 	b. Re-run the initial command with the proper USB port. 
 		i. Example: "java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB5:115200"
 
