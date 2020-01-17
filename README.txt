@@ -1,6 +1,6 @@
 Setup: 
 1. Load the "basestation" program onto one tmote.
-	a. When installing "basestation" on a tmote, use the following command:" make telosb reinstall.0"
+	a. When installing "basestation" on a tmote, use the following command: "make telosb reinstall.0"
 	b. This sets the tmote running the "basestation" program to nodeid=0. 
 
 2. Load the "node" program onto as many tmote as desired.
