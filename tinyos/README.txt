@@ -1,20 +1,17 @@
-README for Sense 
-Author/Contact: tinyos-help@millennium.berkeley.edu
+Setup: 
+1. Load the "basestation" program onto one tmote.
+	a. When installing "basestation" on a tmote, use the following command: "make telosb reinstall.0"
+	b. This sets the tmote running the "basestation" program to nodeid=0. 
 
-Description:
+2. Load the "node" program onto as many tmote as desired.
+	a. Set different nodeids for each tmote running the "node" application.
+		i. Example: "make telosb reinstall.5" "make telosb reinstall.10" "make telosb reinstall.15"
 
-Sense is a simple sensing demo application. It periodically samples the
-default sensor and displays the bottom bits of the readings on the leds of the
-node. Have a look at tinyos-2.x/doc/html/tutorial/lesson5.html for a general
-tutorial on sensing in TinyOS.
+3. Have the tmote running the "basestation" program plugged into your computer.
 
-Tools:
-
-None.
-
-Known bugs/limitations:
-
-None.
+4. Now, run the following command: "java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB0:115200"
+	a. If this fails, run the command: "motelist"	
+	b. Re-run the initial command with the proper USB port. 
+		i. Example: "java net.tinyos.tools.PrintfClient -comm serial@/dev/ttyUSB5:115200"
 
 
-$Id: README.txt,v 1.4 2006-12-12 18:22:49 vlahan Exp $
