@@ -20,6 +20,7 @@ implementation {
   message_t self_temp_packet, node_temp_packet, bcast_temp_packet;
   bool busy = FALSE;
   uint16_t bcast_counter;
+  uint16_t timer;
 
   event void Boot.booted() {
     call RadioControl.start();
@@ -56,8 +57,9 @@ implementation {
 
         call Leds.led1Toggle();
         if (message->forwarded) { call Leds.led2Toggle(); }
-
-        call Timer0.startOneShot(300);
+		
+	timer = (TOS_NODE_ID * 1000);
+        call Timer0.startOneShot(timer);
 
       } else {
         call Leds.led2Toggle();
@@ -69,6 +71,7 @@ implementation {
         node_temp_msg->temperature = message->temperature;
         node_temp_msg->bcast_counter = message->bcast_counter;
         node_temp_msg->hops = message->hops + 1;
+	//node_temp_msg->path[node_temp_msg->hops]=TOS_NODE_ID;
         if (call AMSend.send(bcast_node, &node_temp_packet, sizeof(TempMsg_t)) == SUCCESS) {
           busy = TRUE;
         }
@@ -89,6 +92,7 @@ implementation {
     self_temp_msg->nodeid = TOS_NODE_ID;
     self_temp_msg->forwarded = FALSE;
     self_temp_msg->temperature = temperature;
+    //self_temp_msg->path[0]=TOS_NODE_ID;
     if (call AMSend.send(bcast_node, &self_temp_packet, sizeof(TempMsg_t)) == SUCCESS) 
     { 
     	busy = TRUE; 
