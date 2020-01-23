@@ -107,8 +107,8 @@ implementation {
       printf("Data: %d\n", val);
       	if (forwarded) 
       	{
-      		printf("This message hopped nodes: %d", hops);
-      		printf(" times\n");
+      		//printf("This message hopped nodes: %d", hops);
+      		//printf(" times\n");
 	
 		//for(i=0; i<10; i++)
 		//{
