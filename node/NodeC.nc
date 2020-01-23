@@ -20,7 +20,7 @@ implementation {
   message_t self_temp_packet, node_temp_packet, bcast_temp_packet;
   bool busy = FALSE;
   uint16_t bcast_counter;
-  uint16_t timer;
+  //uint16_t timer;
 
   event void Boot.booted() {
     call RadioControl.start();
@@ -37,6 +37,7 @@ implementation {
       TempMsg_t* bcast_temp_msg;
       TempMsg_t* node_temp_msg;
       uint8_t type = message->type;
+      uint16_t hops = message->hops+1;
       
       if (type == 0) {
         
@@ -51,15 +52,48 @@ implementation {
         bcast_temp_msg->type = message->type;
         bcast_temp_msg->bcast_counter = bcast_counter;
         bcast_temp_msg->forwarded = TRUE;
+	bcast_temp_msg->hops = hops;
         if (call AMSend.send(AM_BROADCAST_ADDR, &bcast_temp_packet, sizeof(TempMsg_t)) == SUCCESS) {
           busy = TRUE;
         }
 
         call Leds.led1Toggle();
         if (message->forwarded) { call Leds.led2Toggle(); }
-		
-	timer = (TOS_NODE_ID * 1000);
-        call Timer0.startOneShot(timer);
+	
+	//Method to delay timer by node id
+	//timer = (TOS_NODE_ID * 1000);
+	//call Timer0.startOneShot(timer);
+	
+	// Delays the timer by the hops away from the root node. Testing this delay delivery method Jan 23rd.
+	if (hops == 1)
+	{ 
+        	call Timer0.startOneShot(2000);
+	}
+	else if (hops == 2)
+	{	
+		call Timer0.startOneShot(4000);	
+	}
+	else if (hops == 3)
+	{
+		call Timer0.startOneShot(6000);
+	}
+	else if (hops == 4)
+	{
+		call Timer0.startOneShot(8000);
+	}
+	else if (hops == 5)
+	{
+		call Timer0.startOneShot(8000);
+	}
+	else if (hops == 6)
+	{
+		call Timer0.startOneShot(10000);
+	}
+	else
+	{
+		call Timer0.startoneShot(0);
+	}
+
 
       } else {
         call Leds.led2Toggle();

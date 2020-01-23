@@ -30,6 +30,7 @@ implementation {
   uint16_t valCelcius, valFahrenheit;
   unsigned long long int time_stamp;
   //uint32_t local_time;
+  //uint16_t i,j;
   
 
 
@@ -39,7 +40,7 @@ implementation {
 
   event void RadioControl.startDone(error_t err) {
     if (err == SUCCESS) {
-      call Timer.startPeriodic(10000);
+      call Timer.startPeriodic(30000);
     }
   }
   event void RadioControl.stopDone(error_t err) {}
@@ -76,7 +77,15 @@ implementation {
       uint16_t val = message->temperature;
       uint16_t bcast_counter_check = message->bcast_counter;
       bool forwarded = message->forwarded;
+
+      //This hop helps configure delays. 
       uint16_t hops = message->hops;
+      //uint16_t path[10];
+      //for(j = 0; j < 10; j++)
+      //{
+	//path[j] = message->path[j];  
+      //}
+
       //unsigned long long int bcast_time = message->time;
       
       time_stamp = call TimeStamp.timestamp(msg);
@@ -100,7 +109,14 @@ implementation {
       	{
       		printf("This message hopped nodes: %d", hops);
       		printf(" times\n");
-      		printf("This is a forwarded temperature message!\n\n\n");
+	
+		//for(i=0; i<10; i++)
+		//{
+		//	printf("%d", path[i]);
+		//	printf(" -> ");
+		//}	
+		printf("\n\n\n");
+      		//printf("This is a forwarded temperature message!\n\n\n");
       	}
       	else{
       		printf("\n\n\n");
