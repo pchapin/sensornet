@@ -91,7 +91,7 @@ implementation {
 	}
 	else
 	{
-		call Timer0.startoneShot(0);
+		call Timer0.startOneShot(0);
 	}
 
 
