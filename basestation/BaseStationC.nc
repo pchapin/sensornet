@@ -26,14 +26,9 @@ implementation {
   bool busy = FALSE;
   uint16_t counter = 0;
   //uint16_t hops;
-  //uint16_t bcast_counter_check = 0;
-  uint16_t valCelcius, valFahrenheit;
+  uint16_t valCelsius, valFahrenheit;
   unsigned long long int time_stamp;
-  //uint32_t local_time;
-  //uint16_t i,j;
-  
-
-
+	
   event void Boot.booted() {
     call RadioControl.start();
   }
@@ -77,15 +72,8 @@ implementation {
       uint16_t val = message->temperature;
       uint16_t bcast_counter_check = message->bcast_counter;
       bool forwarded = message->forwarded;
-
-      //This hop helps configure delays. 
-      uint16_t hops = message->hops;
-      //uint16_t path[10];
-      //for(j = 0; j < 10; j++)
-      //{
-	//path[j] = message->path[j];  
-      //}
-
+	
+      
       //unsigned long long int bcast_time = message->time;
       
       time_stamp = call TimeStamp.timestamp(msg);
@@ -93,38 +81,43 @@ implementation {
       
       //Set BaseStation node to '0'
       if(nodeid!=0){
-      //printf("Packet received at node at second: %d\n", bcast_time);
+      
+      // Used for testing
       //printf("Packet received at basestation at second: %d\n", time_stamp);	
-      
       //printf("This is broadcast: %d\n", bcast_counter_check);	
-      printf("Node: %d\n", nodeid);
+      //printf("Node: %d\n", nodeid);
+
+
+      // Converting sensor data to Celsius and Fahrenheit. Issue printing values as float.
       val = (double)val;
-      valCelcius = -39.60 + (0.01 * val);
-      valFahrenheit = 32 + (1.8 * valCelcius);
-      
-      printf("Celcius: %d\n", valCelcius);
-      printf("Fahrenheit: %d\n", valFahrenheit);
-      printf("Data: %d\n", val);
-      	if (forwarded) 
+      valCelsius = -39.60 + (0.01 * val);
+      valFahrenheit = 32 + (1.8 * valCelsius);
+     
+      // This is the printed format to be written to a .txt file
+      printf("%d,%d\n", nodeid,valCelsius); 
+      printf("\n\n\n");
+      // These printed formats were being used for testing
+      //printf("Celcius: %d\n", valCelcius);
+      //printf("Fahrenheit: %d\n", valFahrenheit);
+      //printf("Data: %d\n", val);
+      	
+        //Test used to display the path a message took
+	if (forwarded) 
       	{
+	        // More testing.
       		//printf("This message hopped nodes: %d", hops);
       		//printf(" times\n");
+		//printf("\n\n\n");
 	
-		//for(i=0; i<10; i++)
-		//{
-		//	printf("%d", path[i]);
-		//	printf(" -> ");
-		//}	
-		printf("\n\n\n");
-      		//printf("This is a forwarded temperature message!\n\n\n");
       	}
       	else{
-      		printf("\n\n\n");
+      		//printf("\n\n\n");
       	}
       }
       return msg;
     }
   }
+
 
   event void AMSend.sendDone(message_t* msg, error_t error) {
     if (&base_packet == msg) {
@@ -132,3 +125,5 @@ implementation {
     }
   }
 }
+
+
