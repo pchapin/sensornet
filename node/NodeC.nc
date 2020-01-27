@@ -56,15 +56,13 @@ implementation {
         if (call AMSend.send(AM_BROADCAST_ADDR, &bcast_temp_packet, sizeof(TempMsg_t)) == SUCCESS) {
           busy = TRUE;
         }
-
-        call Leds.led1Toggle();
-        if (message->forwarded) { call Leds.led2Toggle(); }
+        
 	
 	//Method to delay timer by node id
 	//timer = (TOS_NODE_ID * 1000);
 	//call Timer0.startOneShot(timer);
 	
-	// Delays the timer by the hops away from the root node. Testing this delay delivery method Jan 23rd.
+	// Delays the timer for taking a sensor reading by the hops from the root node.
 	if (hops == 1)
 	{ 
         	call Timer0.startOneShot(2000);
@@ -96,8 +94,11 @@ implementation {
 
 
       } else {
-        call Leds.led2Toggle();
-
+       
+	// Toggle Blue LED if forwarding a child's sensor packet
+        // call Leds.led2Toggle();
+        
+        //Forward child sense data to parent. Hops here was for debugging at basestation.   
         node_temp_msg = (TempMsg_t*)call Packet.getPayload(&node_temp_packet, sizeof(TempMsg_t));
         node_temp_msg->type = message->type;
         node_temp_msg->nodeid = message->nodeid;
