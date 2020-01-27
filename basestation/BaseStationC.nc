@@ -35,7 +35,10 @@ implementation {
 
   event void RadioControl.startDone(error_t err) {
     if (err == SUCCESS) {
-      call Timer.startPeriodic(30000);
+      // Send broadcast for sensor data every 30 seconds (for testing)  
+      //call Timer.startPeriodic(30000);
+      // Send broadcast for sensor data every 10 minutes
+      call Timer.startPeriodic(600000);
     }
   }
   event void RadioControl.stopDone(error_t err) {}
