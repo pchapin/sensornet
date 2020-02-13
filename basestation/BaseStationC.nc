@@ -35,9 +35,11 @@ implementation {
 
   event void RadioControl.startDone(error_t err) {
     if (err == SUCCESS) {
+      // Send broadcast for sensor data every 1 seconds (for testing)
+      //call Timer.startPeriodic(1000);
       // Send broadcast for sensor data every 30 seconds (for testing)  
       //call Timer.startPeriodic(30000);
-      // Send broadcast for sensor data every 10 minutes
+      // Send broadcast for sensor data every 10 minutes (production)
       call Timer.startPeriodic(600000);
     }
   }
@@ -67,7 +69,6 @@ implementation {
     if (len != sizeof(TempMsg_t)) {
       return msg;
     } else {
-    	 
       TempMsg_t* message = (TempMsg_t*)payload;
       
       uint8_t type = message->type;
@@ -98,24 +99,24 @@ implementation {
      
       // This is the printed format to be written to a .txt file
       printf("%d,%d\n", nodeid,valCelsius); 
-      printf("\n\n\n");
+      //printf("\n\n\n");
       // These printed formats were being used for testing
       //printf("Celcius: %d\n", valCelcius);
       //printf("Fahrenheit: %d\n", valFahrenheit);
       //printf("Data: %d\n", val);
       	
         //Test used to display the path a message took
-	if (forwarded) 
-      	{
+	//if (forwarded) 
+      	//{
 	        // More testing.
       		//printf("This message hopped nodes: %d", hops);
       		//printf(" times\n");
 		//printf("\n\n\n");
 	
-      	}
-      	else{
+      	//}
+      	//else{
       		//printf("\n\n\n");
-      	}
+      	//}
       }
       return msg;
     }

@@ -20,7 +20,7 @@ implementation {
   message_t self_temp_packet, node_temp_packet, bcast_temp_packet;
   bool busy = FALSE;
   uint16_t bcast_counter;
-  //uint16_t timer;
+  uint16_t timer;
 
   event void Boot.booted() {
     call RadioControl.start();
@@ -57,12 +57,14 @@ implementation {
           busy = TRUE;
         }
         
-	
+        //call Leds.led2Toggle();	
+	//call Timer0.startOneShot(200);
 	//Method to delay timer by node id
-	//timer = (TOS_NODE_ID * 1000);
-	//call Timer0.startOneShot(timer);
+	timer = (TOS_NODE_ID * 1000);
+	call Timer0.startOneShot(timer);
 	
 	// Delays the timer for taking a sensor reading by the hops from the root node.
+	/*
 	if (hops == 1)
 	{ 
         	call Timer0.startOneShot(2000);
@@ -91,12 +93,12 @@ implementation {
 	{
 		call Timer0.startOneShot(0);
 	}
-
+	*/
 
       } else {
        
 	// Toggle Blue LED if forwarding a child's sensor packet
-        // call Leds.led2Toggle();
+        //call Leds.led1Toggle();
         
         //Forward child sense data to parent. Hops here was for debugging at basestation.   
         node_temp_msg = (TempMsg_t*)call Packet.getPayload(&node_temp_packet, sizeof(TempMsg_t));
