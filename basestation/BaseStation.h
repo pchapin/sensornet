@@ -8,7 +8,6 @@ typedef nx_struct TempMsg {
   nx_uint16_t bcast_counter;
   nx_bool forwarded;
   nx_uint16_t hops;
-  //nx_uint16_t path[10];
 } TempMsg_t;
 
 enum {
