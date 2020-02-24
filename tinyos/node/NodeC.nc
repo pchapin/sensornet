@@ -20,6 +20,7 @@ implementation {
   message_t self_temp_packet, node_temp_packet, bcast_temp_packet;
   bool busy = FALSE;
   uint16_t bcast_counter;
+  uint16_t timer;
 
   event void Boot.booted() {
     call RadioControl.start();
@@ -32,36 +33,44 @@ implementation {
     if (len != sizeof(TempMsg_t)) {
       return msg;
     } else {
+    
+      // Get the message
       TempMsg_t* message = (TempMsg_t*)payload;
       TempMsg_t* bcast_temp_msg;
       TempMsg_t* node_temp_msg;
       uint8_t type = message->type;
+      uint16_t hops = message->hops+1;
       
+      // If the message is a broadcast from basestation
       if (type == 0) {
         
+        // If node has already seen this broadcast, return
         if (message->bcast_counter <= bcast_counter) {
           return msg ;
         }
-        
+        // Update the broadcast message counter. No message repeats
         bcast_counter = message->bcast_counter;
+        
+        // Set the address of the node from which broadcast was received, to parent
         bcast_node = call AMPacket.source(msg);
-
+        
+        // Repackage and broadcast the message to surrounding nodes.
         bcast_temp_msg = (TempMsg_t*)call Packet.getPayload(&bcast_temp_packet, sizeof(TempMsg_t));
         bcast_temp_msg->type = message->type;
         bcast_temp_msg->bcast_counter = bcast_counter;
         bcast_temp_msg->forwarded = TRUE;
+		bcast_temp_msg->hops = hops;
         if (call AMSend.send(AM_BROADCAST_ADDR, &bcast_temp_packet, sizeof(TempMsg_t)) == SUCCESS) {
           busy = TRUE;
         }
-
-        call Leds.led1Toggle();
-        if (message->forwarded) { call Leds.led2Toggle(); }
-
-        call Timer0.startOneShot(300);
+	    // Delay is set by node's id, after delay get sensor reading and forward message directly to parent.    
+		timer = (TOS_NODE_ID * 1000);
+		call Timer0.startOneShot(timer);
 
       } else {
-        call Leds.led2Toggle();
-
+       
+        // If message not a broadcast, message is a sensor packet from child.
+        // Forward child sense data to parent. Hops here was for debugging at basestation.   
         node_temp_msg = (TempMsg_t*)call Packet.getPayload(&node_temp_packet, sizeof(TempMsg_t));
         node_temp_msg->type = message->type;
         node_temp_msg->nodeid = message->nodeid;
@@ -69,6 +78,7 @@ implementation {
         node_temp_msg->temperature = message->temperature;
         node_temp_msg->bcast_counter = message->bcast_counter;
         node_temp_msg->hops = message->hops + 1;
+	
         if (call AMSend.send(bcast_node, &node_temp_packet, sizeof(TempMsg_t)) == SUCCESS) {
           busy = TRUE;
         }

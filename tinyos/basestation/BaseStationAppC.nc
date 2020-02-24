@@ -28,5 +28,4 @@ implementation {
   BaseStationC.AMPacket -> AMSenderC;
   BaseStationC.TimeStamp -> ActiveMessageC;
   
-  //BaseStationC.LocalTime -> ActiveMessageC;
 }
