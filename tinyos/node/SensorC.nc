@@ -9,13 +9,11 @@ module SensorC
 }
 implementation
 {
-    command void Sensor.read_sensor( ) 
-    {
+    command void Sensor.read_sensor( )  {
         call Read.read( );
     }
 
-    event void Read.readDone( error_t result, uint16_t data )
-    {
+    event void Read.readDone( error_t result, uint16_t data ) {
         // Ignore errors...
         if( result == SUCCESS ) {
 
